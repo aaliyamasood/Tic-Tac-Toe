@@ -1,0 +1,23 @@
+table {
+    border-collapse: collapse;
+}
+
+td {              /* each element */
+    width: 100px;
+    height: 100px;
+
+    border-style: solid;
+    border-width: 5px;
+    border-color: black;
+}
+
+button {
+    width: 103%;
+    height: 103%;
+    margin-left: -1px;
+    font-size: 50px;
+}
+
+button:disabled {
+    color: black;
+}
