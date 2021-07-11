@@ -11,7 +11,7 @@ td {              /* each element */
     border-color: black;
 }
 
-button {
+.boardButton {
     width: 103%;
     height: 103%;
     margin-left: -1px;
@@ -20,4 +20,9 @@ button {
 
 button:disabled {
     color: black;
+}
+
+#reset {
+  width: 60%;
+  height: 40%;
 }
