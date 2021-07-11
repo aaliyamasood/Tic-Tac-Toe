@@ -33,6 +33,24 @@ for(let i = 0; i < 3; i++) {
     }
 }
 
+function randomMove(){
+  let emptySpot = [];
+  let count=0;
+  for (let i=0; i<3; i++){
+    for (let j=0; j<3; j++){
+      if (boardState[j][i] == 0){
+        emptySpot.push([j, i]);
+        count++;
+      }
+    }
+  }
+  randNum = Math.floor(Math.random() * count);
+  if (count == 0){
+    return false;
+  }
+  return emptySpot[randNum];
+}
+
 function singlePlayer(){
   gameType = "S";
   let name = window.prompt("Do you want to be X or O?: ");
@@ -96,7 +114,7 @@ function isValid(row, col) {
 
 function checkDirection(col, row, deltaCol, deltaRow, turn) {
   if(isValid(col + (2*deltaCol), row + (2*deltaRow)) == true) {  // checking down vertically
-    if(boardState[col + deltaCol][row + deltaRow] == turn && boardState[col + (2*deltaCol)][row + deltaRow] == 0) {
+    if(boardState[col + deltaCol][row + deltaRow] == turn && boardState[col + (2*deltaCol)][row + (2*deltaRow)] == 0) {
       return [col + (2*deltaCol), row + (2*deltaRow)]; // returns the furthest coordinate from current element
     } else if(boardState[col + deltaCol][row + deltaRow] == 0 && boardState[col + (2*deltaCol)][row + (2*deltaRow)] == turn) {
       return [col + deltaCol, row + deltaRow];
@@ -108,29 +126,33 @@ function checkDirection(col, row, deltaCol, deltaRow, turn) {
 // if letter is AI, win in one move
 // if letter is player, block in one move
 function winBlock(turn) {
+  let turn1;
+  if(turn == 0) turn1 = AIMove; 
+  else turn1 = turn; // if false - proceed to win or block
   for(let i = 0; i < 3; i++) {
     for(let j = 0; j < 3; j++) {
-      if(boardState[j][i] == turn) {
-        if(checkDirection(j, i, 1, 0) != false) { // down
+      if(boardState[j][i] == turn1) {
+        if(checkDirection(j, i, 1, 0, turn) != false) { // down
           return checkDirection(j, i, 1, 0, turn);
-        } else if(checkDirection(j, i, 0, 1) != false) { // checking right
+        } else if(checkDirection(j, i, 0, 1, turn) != false) { // checking right
           return checkDirection(j, i, 0, 1, turn); 
-        } else if(checkDirection(j, i, 1, 1) != false) { // diagonally top to bottom right
+        } else if(checkDirection(j, i, 1, 1, turn) != false) { // diagonally top to bottom right
           return checkDirection(j, i, 1, 1, turn); 
-        } else if(checkDirection(j, i, -1, 0) != false) { // up
+        } else if(checkDirection(j, i, -1, 0, turn) != false) { // up
           return checkDirection(j, i, -1, 0, turn); 
-        } else if (checkDirection(j, i, -1, -1) != false){ // diagonally bottom right to top left
+        } else if (checkDirection(j, i, -1, -1, turn) != false){ // diagonally bottom right to top left
           return checkDirection(j, i, -1, -1, turn);
-        } else if (checkDirection(j, i, 0, -1) != false){ // checking left
+        } else if (checkDirection(j, i, 0, -1, turn) != false){ // checking left
           return checkDirection(j, i, 0, -1, turn);
-        } else if (checkDirection(j, i, -1, 1) != false){ // diagonally bottom left to top right
+        } else if (checkDirection(j, i, -1, 1, turn) != false){ // diagonally bottom left to top right
           return checkDirection(j, i, -1, 1, turn); 
-        } else if (checkDirection(j, i, 1, -1) != false){ // diagonally top right to bottom left
+        } else if (checkDirection(j, i, 1, -1, turn) != false){ // diagonally top right to bottom left
           return checkDirection(j, i, 1, -1, turn); 
         }
       }
     }
   }
+  //console.log("returns false");
   return false;
 }
 
@@ -141,10 +163,19 @@ function playAIMove(firstMove) {
   } else {
     move = winBlock(AIMove); // win - if win, stop here 
     if(move == false) {
-      winBlock(playerMove); // block
+      move = winBlock(playerMove); // block
+    }
+    if(move == false) {
+      move = winBlock(0);
+    }
+    if (move == false){
+      move = randomMove();
+      if (move == false){
+        confirm("It's a tie!");
+      }
     }
   }
-
+  //console.log("move", move);
   boardState[move[0]][move[1]] = AIMove;
   if(AIMove == 1) {
     btnArray[move[0]][move[1]].innerHTML = "X"
