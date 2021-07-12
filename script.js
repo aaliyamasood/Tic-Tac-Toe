@@ -33,6 +33,23 @@ for(let i = 0; i < 3; i++) {
     }
 }
 
+let resetBtn = document.getElementById("reset");
+let singleBtn = document.getElementById("singlePlayer");
+let multiBtn = document.getElementById("multiPlayer");
+resetBtn.className = "options";
+singleBtn.className = "options";
+multiBtn.className = "options";
+
+functionality(true);
+
+function functionality(disable){ // enabling/disabling the board
+  for (let i=0; i<3; i++){
+    for (let j=0; j<3; j++){
+      btnArray[i][j].disabled = disable;
+    }
+  }
+}
+
 function randomMove(){
   let emptySpot = [];
   let count=0;
@@ -52,6 +69,7 @@ function randomMove(){
 }
 
 function singlePlayer(){
+  functionality(false);
   gameType = "S";
   let name = window.prompt("Do you want to be X or O?: ");
   if (name == "X"){
@@ -89,6 +107,7 @@ function singlePlayer(){
 }
 
 function multiPlayer() {
+  functionality(false);
   gameType = "M";
   let name = window.prompt("Which player wants to go first (X/O)?: ");
   while(name != "X" && name != "O") {
@@ -172,6 +191,8 @@ function playAIMove(firstMove) {
       move = randomMove();
       if (move == false){
         confirm("It's a tie!");
+        reset();
+        current = !current;
       }
     }
   }
@@ -182,6 +203,9 @@ function playAIMove(firstMove) {
   } else {
     btnArray[move[0]][move[1]].innerHTML = "O";
   }
+  
+  btnArray[move[0]][move[1]].disabled = true;
+
 
   current = !current;
 }
@@ -342,3 +366,4 @@ function reset() {
   }
 
 }
+
