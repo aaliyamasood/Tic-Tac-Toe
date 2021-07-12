@@ -332,7 +332,7 @@ function click() {
     console.log(boardState);  // printing board array
     this.disabled = true; // disables a button after it's clicked on
     setTimeout(solve, 100);
-    if (gameType = "S"){
+    if (gameType == "S"){
       let count = 0;
       for(let i = 0; i < 3; i++) {
         for(let j = 0; j < 3; j++) {
